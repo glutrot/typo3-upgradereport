@@ -44,12 +44,16 @@ class Tx_Smoothmigration_Checks_Core_MissingAddPluginParameter_ResultAnalyzer
 	 * @return string
 	 */
 	public function getSolution(Tx_Smoothmigration_Domain_Model_Issue $issue) {
+        // getMinimumVersion/getMaximumVersion is only available if location is
+        // an instance of Tx_Smoothmigration_Domain_Model_IssueLocation_Extension
+        $location = $issue->getLocation();
+        $isExtension = ($location instanceof Tx_Smoothmigration_Domain_Model_IssueLocation_Extension);
 		return $this->ll(
 			'result.typo3-core-code-missingaddpluginparameter.solution',
 			array(
-				$issue->getLocation()->getExtension(),
-				$issue->getLocation()->getMinimumVersion(),
-				$issue->getLocation()->getMaximumVersion(),
+				$location->getExtension(),
+				$isExtension ? $location->getMinimumVersion() : '',
+				$isExtension ? $location->getMaximumVersion() : '',
 			)
 		);
 	}
